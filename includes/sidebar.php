@@ -371,7 +371,7 @@
     $sales = 80;
     $comments = 284;
     ?>
- 
+
 
     <!-- =============== Navigation ================ -->
     <div class="container">
@@ -459,10 +459,15 @@
                 </div>
 
                 <div class="search">
-                    <label>
-                        <input type="text" placeholder="Search here">
-                        <ion-icon name="search-outline"></ion-icon>
-                    </label>
+                    <form method="get">
+                        <label>
+                            <input type="text" placeholder="Search here">
+                            <ion-icon name="search-outline"></ion-icon>
+
+                        </label>
+                        <button type="submit">بحث</button>
+                    </form>
+
                 </div>
 
                 <div class="user">
@@ -485,7 +490,7 @@
 
                 <div class="card">
                     <div>
-                        <div class="numbers"><?=  $beds ?></div>
+                        <div class="numbers"><?= $beds ?></div>
                         <div class="cardName">Chambers</div>
                     </div>
 
