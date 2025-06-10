@@ -432,11 +432,11 @@
                 </li>
 
                 <li>
-                    <a href="forget_password.php">
+                    <a href="restpassadmi.php">
                         <span class="icon">
                             <ion-icon name="lock-closed-outline"></ion-icon>
                         </span>
-                        <span class="title">Password</span>
+                        <span class="title">change passwordPassword</span>
                     </a>
                 </li>
 

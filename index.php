@@ -53,7 +53,7 @@
                             </ul>
                             <div class="btn-group">
                                 <a href="login.php" class="btn  me-2">Login</a>
-                                <a href="signup.php" class="btn ">Sign Up</a>
+                                <a href="adminlogin.php" class="btn ">Admin</a>
                             </div>
                         </div>
                     </nav>

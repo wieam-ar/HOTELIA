@@ -12,10 +12,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute([':email' => $email]);
 
     if ($stmt->rowCount() == 1) {
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $client = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (password_verify($password, $user['password'])) {
-            $_SESSION['user_email'] = $user['email'];
+        if (password_verify($password, $client['password'])) {
+            $_SESSION['client_email'] = $client['email'];
+             $_SESSION['client_id'] = $client['id'];
            
             echo "<script>alert('✅ Login successful!');</script>";
              header("Location: index.php");
