@@ -67,7 +67,7 @@
     <section id="section1" class="mt-5 " style="height:100vh; ">
         <div class="container  " >
             <video autoplay muted loop class="hero-section" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: -1; border-radius: 20px;">
-                <source src="./pictures/3410663-uhd_2562_1440_30fps (1).mp4" type="video/mp4" >
+                <source src="./pictures/3410663-uhd_2562_1440_30fps (2).mp4" type="video/mp4" >
             </video>
             <div class="row justify-content-center ">
                 <div class="col-md-10 col-sm-12 centrehero mt-5 mx-auto">
@@ -79,12 +79,12 @@
                     <div  >
                         <div class="row g-2 align-items-center">
                             <div class="col-md-12 col-sm some d-flex justify-content-center " id="search-form">
-                                <form action="formreservation.php" method="post"  >
+                                <form action="reservation.php" method="GET"  >
                                     <div class="input-group ml-3">
                                         <span class="input-group-text border-0">
                                             <i class="fas fa-map-marker-alt icon-location"></i>
                                         </span>
-                                        <input type="text" name="nom_hotel" id="nom_hotel" class="form-control search-input border-0" placeholder="Nom hotel vous aller allerOù vous aller aller, réserver ?">
+                                        <input type="text" name="ville" id="ville" class="form-control search-input border-0" placeholder="Nom hotel vous aller allerOù vous aller aller, réserver ?">
                                     </div>
 
                                     <div class="input-group">

@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $filename = $_FILES['image']['name'];
         $temp = $_FILES['image']['tmp_name'];
         move_uploaded_file($temp, "uploads/" . $filename);
+        
     }
 
     // Mettre à jour

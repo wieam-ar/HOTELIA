@@ -43,7 +43,7 @@ if (isset($_GET['delete'])) {
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ff780a 0%, #f1c945 100%);
     min-height: 100vh;
     color: #333;
     line-height: 1.6;
@@ -99,13 +99,13 @@ form {
 input[type="file"] {
     padding: 12px;
     background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%);
-    border: 2px dashed #667eea;
+    border: 2px dashedrgb(255, 255, 255);
     cursor: pointer;
 }
 
 input[type="file"]:hover {
     background: linear-gradient(135deg, #e8ecff 0%, #d0d8ff 100%);
-    border-color: #5a67d8;
+    border-color: linear-gradient(135deg, #ff780a 0%, #f1c945 100%);
 }
 
 /* ====== Textarea Styling ====== */
@@ -133,7 +133,7 @@ textarea.form-control {
 }
 
 .btn-primary {
-    background: linear-gradient(90deg, transparent,rgb(255, 187, 39), transparent);
+    background: linear-gradient(135deg, #ff780a 0%, #f1c945 100%);
     color: white;
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }

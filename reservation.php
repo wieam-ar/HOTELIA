@@ -1,8 +1,24 @@
 <?php
 include './includes/db.php';
 
-$stmt = $pdo->query("SELECT * FROM chambres ORDER BY id_chambre DESC");
-$rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Get filter values safely (from GET)
+$location = isset($_GET['ville']) ? $_GET['ville'] : '';
+$date_arrivee = isset($_GET['date_arrivee']) ? $_GET['date_arrivee'] : '';
+$date_depart = isset($_GET['date_depart']) ? $_GET['date_depart'] : '';
+$personnes = isset($_GET['personnes']) ? (int)$_GET['personnes'] : 1;
+
+// Prepare hotels query
+if ($location !== '') {
+    $stmt = $pdo->prepare("SELECT * FROM hotels WHERE ville LIKE ? ORDER BY id_hotel DESC");
+    $stmt->execute(["%$location%"]);
+} else {
+    $stmt = $pdo->query("SELECT * FROM hotels ORDER BY id_hotel DESC");
+}
+$hotels = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Get all rooms (chambres)
+$stmt2 = $pdo->query("SELECT * FROM chambres ORDER BY id_chambre DESC");
+$rooms = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -449,6 +465,7 @@ $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <section id="section" class="py-5">
         <div class="container">
+
             <!-- Heading -->
             <div class="row mb-5">
                 <div class="col-12 text-center text-white">
@@ -466,25 +483,19 @@ $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="row m-4 p-3">
                 <div class="col-md-4 text-center">
                     <div class="step active">
-                        <div class="step-icon">
-                            <i class="fas fa-hotel" style="color: GOLD;"></i>
-                        </div>
+                        <div class="step-icon"><i class="fas fa-hotel" style="color: GOLD;"></i></div>
                         <div class="step-text text-light">Choisir un Hôtel</div>
                     </div>
                 </div>
                 <div class="col-md-4 text-center">
                     <div class="step">
-                        <div class="step-icon">
-                            <i class="fas fa-bed" style="color: GOLD;"></i>
-                        </div>
+                        <div class="step-icon"><i class="fas fa-bed" style="color: GOLD;"></i></div>
                         <div class="step-text text-light">Sélectionner les Chambres</div>
                     </div>
                 </div>
                 <div class="col-md-4 text-center">
                     <div class="step">
-                        <div class="step-icon">
-                            <i class="fas fa-credit-card" style="color: GOLD;"></i>
-                        </div>
+                        <div class="step-icon"><i class="fas fa-credit-card" style="color: GOLD;"></i></div>
                         <div class="step-text text-light">Paiement</div>
                     </div>
                 </div>
@@ -492,54 +503,57 @@ $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             <!-- Hotels Display -->
             <div class="row" id="hotels-list">
-                <?php
-                include './includes/db.php';
-                $hotels = $pdo->query("SELECT * FROM hotels ORDER BY id_hotel DESC LIMIT 4")->fetchAll();
-                foreach ($hotels as $hotel) {
-                    echo '
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card border-0 shadow-lg h-100 overflow-hidden">
-                        <div class="card-img-container position-relative">
-                            <img src="uploads/' . $hotel['image'] . '" class="card-img-top" style="height: 220px; object-fit: cover;">
-                            <span class="badge bg-dark position-absolute top-0 end-0 m-2 px-3 py-2">
-                                <i class="fas fa-tag me-1"></i>700 MAD/nuit
-                            </span>
-                        </div>
-                        <div class="card-body bg-white text-dark">
-                            <div class="star-rating mb-2">
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                                <span class="ms-2 text-muted">(4.5)</span>
-                            </div>
-                            <h5 class="card-title fw-bold">' . $hotel['nom_hotel'] . '</h5>
-                            <div class="amenities">
-                                <i class="fas fa-wifi amenity-icon" title="WiFi gratuit"></i>
-                                <i class="fas fa-swimming-pool amenity-icon" title="Piscine"></i>
-                                <i class="fas fa-car amenity-icon" title="Parking"></i>
-                                <i class="fas fa-utensils amenity-icon" title="Restaurant"></i>
-                            </div>
-                            <p class="card-text">' . $hotel['ville'] . '</p>
-                            <a href="#" class="btn btn-outline-dark w-100 mt-2 rounded-5" onclick="goToStep(1)">
-                                <i class="fas fa-calendar-check me-2"></i>Réserver maintenant
-                            </a>
-                        </div>
-                    </div>
-                </div>';
-                }
-                ?>
-            </div>
+                <?php if (count($hotels) === 0): ?>
+                    <p class="text-warning">Aucun hôtel trouvé avec ces critères.</p>
+                <?php else: ?>
+                    <?php foreach ($hotels as $hotel): ?>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="card border-0 shadow-lg h-100 overflow-hidden">
+                                <div class="card-img-container position-relative">
+                                    <img src="uploads/<?php echo htmlspecialchars($hotel['image']); ?>" class="card-img-top" style="height: 220px; object-fit: cover;">
 
-            <!-- Explore More Button -->
-            <div class="row mt-5">
-                <div class="col-12 text-center">
-                    <a href="index.php" class="btn btn-explore-more rounded-5 pt-3 pb-3 pl-3 pr-3">
-                        <span class="btn-text"><i class="fas fa-compass me-2"></i>BACK TO LANDING PAGE</span>
-                    </a>
-                </div>
+                                </div>
+                                <div class="card-body bg-white text-dark">
+                                    <h5 class="card-title fw-bold"><?php echo htmlspecialchars($hotel['nom_hotel']); ?></h5>
+                                    <div class="position d-flex justify-content-between">
+                                        <div class="star-rating mb-2">
+                                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                                            <span class="ms-2 text-muted">(4.5)</span>
+                                        </div>
+
+                                        <div class="amenities mb-2">
+                                            <i class="fas fa-wifi amenity-icon me-2" title="WiFi gratuit"></i>
+                                            <i class="fas fa-swimming-pool amenity-icon me-2" title="Piscine"></i>
+                                            <i class="fas fa-car amenity-icon me-2" title="Parking"></i>
+                                            <i class="fas fa-utensils amenity-icon me-2" title="Restaurant"></i>
+                                        </div>
+                                    </div>
+
+                                    <p class="card-text"><?php echo htmlspecialchars($hotel['ville']); ?></p>
+                                    <p class="card-text text-ce"><?php echo htmlspecialchars($hotel['description']); ?></p>
+
+                                        `<a href="reservation.php?step=2&id_hotel=<?php echo $hotel['id_hotel']; ?>&date_arrivee=<?php echo urlencode($date_arrivee); ?>&date_depart=<?php echo urlencode($date_depart); ?>&nb_personnes=<?php echo $personnes; ?>" class="btn btn-outline-dark w-100 mt-2 rounded-5">
+                                            <i class="fas fa-calendar-check me-2"></i>Réserver maintenant
+                                        </a>`
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </div>
-    </section>
 
+        <!-- Back Button -->
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <a href="index.php" class="btn btn-explore-more rounded-5 pt-3 pb-3 px-4">
+                    <span class="btn-text"><i class="fas fa-compass me-2"></i>RETOUR</span>
+                </a>
+            </div>
+        </div>
+        </div>
+    </section>
     <!-- Step 2: Room Selection -->
     <section id="room-selection" class="mb-5 d-none">
         <h2 class="display-4 fw-bold text-center">2. Choisissez vos Chambres pour <span id="selected-hotel-name"></span></h2>
@@ -548,34 +562,30 @@ $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php
             include './includes/db.php';
             $chambres = $pdo->query("SELECT * FROM chambres ORDER BY id_chambre DESC LIMIT 4")->fetchAll();
-
+            ?>
+                <?php
             foreach ($chambres as $chambre) {
-                echo '
+    $reservation_link = "reserver.php?hotel_id={$hotel_id}&chambre_id={$chambre['id_chambre']}&date_arrivee={$date_arrivee}&date_depart={$date_depart}&personnes={$personnes}";
+
+    echo '
     <div class="col-lg-4 col-md-6 mb-4">
         <div class="card border-0 shadow-lg h-100 overflow-hidden">
             <div class="card-body bg-white text-dark">
-                <div class="star-rating mb-2">
-                    <span class="ms-2 text-muted">(4.5)</span>
+               <div class="card-img-container position-relative">
+                    <img src="./pictures/chambre1.jpg" class="card-img-top" style="height: 220px; object-fit: cover;">
                 </div>
                 <h5 class="card-title fw-bold">' . htmlspecialchars($chambre['type_chambre']) . '</h5>
-                
                 <div class="amenities mb-2">
-                    <i class="fas fa-bed amenity-icon me-2" title="Nombre de lits"></i>' .
-                    htmlspecialchars($chambre['nombre_lits']) . ' lits<br>
-                    <i class="fas fa-layer-group amenity-icon me-2" title="Étage"></i>Étage: ' .
-                    htmlspecialchars($chambre['floor']) . '
+                    <i class="fas fa-bed amenity-icon me-2" title="Nombre de lits"></i>' . htmlspecialchars($chambre['nombre_lits']) . ' lits<br>
+                    <i class="fas fa-layer-group amenity-icon me-2" title="Étage"></i>Étage: ' . htmlspecialchars($chambre['floor']) . '
                 </div>
-
-                <p >' . htmlspecialchars($chambre['discription']) . '</p>
+                <p>' . htmlspecialchars($chambre['discription']) . '</p>
                 <p class="fw-semibold mt-2">Prix: ' . htmlspecialchars($chambre['prix']) . ' DH / nuit</p>
-
-                <a href="#" class="btn btn-outline-dark w-100 mt-2 rounded-5" onclick="goToStep(1)">
-                    <i class="fas fa-calendar-check me-2"></i>Réserver maintenant
-                </a>
+                <a href="' . $reservation_link . '" class="btn btn-primary btn-sm">Réserver</a>
             </div>
         </div>
     </div>';
-            }
+}
             ?>
 
 

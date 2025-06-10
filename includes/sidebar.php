@@ -427,7 +427,7 @@
                         <span class="icon">
                             <ion-icon name="settings-outline"></ion-icon>
                         </span>
-                        <span class="title">Settings</span>
+                        <span class="title">gestion hotel</span>
                     </a>
                 </li>
 
@@ -458,17 +458,7 @@
                     <ion-icon name="menu-outline"></ion-icon>
                 </div>
 
-                <div class="search">
-                    <form method="get">
-                        <label>
-                            <input type="text" placeholder="Search here">
-                            <ion-icon name="search-outline"></ion-icon>
-
-                        </label>
-                        <button type="submit">بحث</button>
-                    </form>
-
-                </div>
+               
 
                 <div class="user">
                     <img src="./pictures/girl.png" alt="">
